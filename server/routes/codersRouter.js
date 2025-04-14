@@ -9,6 +9,9 @@ import {
   getTrendingCategories,
   getHeatmap,
 } from '../controllers/statisticsController.js';
+import { registerUser } from '../controllers/accountController.js';
+import { loginUser } from '../controllers/accountController.js';
+import { authorize } from '../middleware/authMiddleware.js';
 
 const codersRouter = express.Router();
 
@@ -41,5 +44,11 @@ codersRouter.get('/trending-categories', getTrendingCategories);
 
 // Route to get the heatmap
 codersRouter.get('/heatmap', getHeatmap);
+
+codersRouter.post('/register', registerUser); 
+
+codersRouter.post('/login', loginUser);
+
+codersRouter.get('/profile', authorize(['Coder']), getProfile); 
 
 export default codersRouter;

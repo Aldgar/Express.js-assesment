@@ -1,8 +1,10 @@
 import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import User from '../models/user.js'; 
+import { registerAccount } from '../services/registrationService.js';
+import { loginAccount } from '../services/loginService.js';
 
-export const registerAccount = async (req, res) => {
+export const createAccount = async (req, res) => {
   // Define Joi schema for validation
   const schema = Joi.object({
     username: Joi.string().min(3).required(),
@@ -33,7 +35,7 @@ export const registerAccount = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-export const loginAccount = async (req, res) => {
+export const loginUserAccount = async (req, res) => {
   
   const schema = Joi.object({
     username: Joi.string().min(3).required(),
@@ -93,5 +95,25 @@ export const updateProfile = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const registerUser = async (req, res) => {
+  try {
+    const response = await registerAccount(req.body);
+    res.status(201).json(response);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const response = await loginAccount(email, password);
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
