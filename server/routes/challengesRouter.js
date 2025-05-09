@@ -1,19 +1,20 @@
 import express from 'express';
 import { 
   createChallenge, 
-  getAllChallenges, 
-  getChallengeById, 
+  listChallengesController, 
+  getChallengeByIdController, 
   getCategories, 
   submitCode 
 } from '../controllers/challengeController.js';
+import { authorize } from '../middleware/authMiddleware.js';
 
-const challengesRouter = express.Router(); // Initialize the router first
+const challengesRouter = express.Router();
 
-// Define routes
-challengesRouter.post('/create', createChallenge); // Route to create a challenge
-challengesRouter.get('/', getAllChallenges); // Route to get all challenges
-challengesRouter.get('/:id', getChallengeById); // Route to get a challenge by ID
+challengesRouter.post('/create', authorize(['Manager']), createChallenge); // Route to create a challenge
+challengesRouter.get('/', authorize(['Coder', 'Manager']), listChallengesController); // Route to list all challenges
+challengesRouter.get('/:id', authorize(['Coder', 'Manager']), getChallengeByIdController); // Route to get a challenge by ID
 challengesRouter.get('/categories', getCategories); // Route to get all categories
-challengesRouter.post('/submit', submitCode); // Route to submit code
+challengesRouter.post('/submit', authorize(['Coder']), submitCode); // Route to submit code
+challengesRouter.post('/grade', authorize(['Coder']), submitCode); // Route to grade submissions
 
 export default challengesRouter;

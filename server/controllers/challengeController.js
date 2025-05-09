@@ -1,5 +1,7 @@
 import Joi from 'joi';
 import Challenge from '../models/challenge.js';
+import { createChallenge as createChallengeService } from '../services/challengeService.js';
+import { gradeSubmission } from '../services/gradingService.js';
 
 export const createChallenge = async (req, res) => {
   // Define Joi schema for validation
@@ -130,4 +132,25 @@ export const submitCode = async (req, res) => {
 
 const simulateGrading = () => {
   return true;
+};
+
+export const createChallengeController = async (req, res) => {
+  try {
+    const response = await createChallengeService(req.body);
+    res.status(201).json(response);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const submitUserCode = async (req, res) => {
+  const userId = req.user.id; // Extracted from the `authorize` middleware
+  const submissionData = req.body;
+
+  try {
+    const response = await gradeSubmission(submissionData, userId);
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };

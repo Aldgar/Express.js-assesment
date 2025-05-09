@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 mongoose.connect('mongodb://localhost:27017/react-assessment', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 30000,
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {

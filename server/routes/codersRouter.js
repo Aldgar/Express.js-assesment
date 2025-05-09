@@ -1,7 +1,5 @@
 import express from 'express';
-import { loginAccount } from '../controllers/accountController.js';
-import { getProfile } from '../controllers/accountController.js';
-import { updateProfile } from '../controllers/accountController.js';
+import { getProfile, updateProfile, registerUser, loginUser } from '../controllers/accountController.js';
 import {
   getLeaderboard,
   getTopCoders,
@@ -9,26 +7,24 @@ import {
   getTrendingCategories,
   getHeatmap,
 } from '../controllers/statisticsController.js';
-import { registerUser } from '../controllers/accountController.js';
-import { loginUser } from '../controllers/accountController.js';
 import { authorize } from '../middleware/authMiddleware.js';
+import { leaderboardController } from '../controllers/statisticsController.js';
+import { solvedChallengesStatisticsController } from '../controllers/statisticsController.js';
+
+
 
 const codersRouter = express.Router();
 
 // Define routes for coders
-codersRouter.post('/login', loginAccount); // Route for coder login
+codersRouter.post('/login', loginUser); // Route for coder login
 
 codersRouter.get('/', (req, res) => {
   res.send('Coders Home Page');
 });
 
-codersRouter.get('/profile', getProfile);
+codersRouter.get('/profile', authorize(['Coder']), getProfile); // Only authorized Coders can access
 
-codersRouter.put('/profile', updateProfile); 
-
-codersRouter.get('/profile', (req, res) => {
-  res.send('Coders Profile Page');
-});
+codersRouter.put('/profile', updateProfile);
 
 // Route to get the leaderboard
 codersRouter.get('/leaderboard', getLeaderboard);
@@ -45,10 +41,14 @@ codersRouter.get('/trending-categories', getTrendingCategories);
 // Route to get the heatmap
 codersRouter.get('/heatmap', getHeatmap);
 
-codersRouter.post('/register', registerUser); 
+codersRouter.post('/register', registerUser);
 
-codersRouter.post('/login', loginUser);
+codersRouter.get('/leaderboard', authorize(['Coder']), leaderboardController); // Only Coders can access
+codersRouter.get('/solved-challenges-stats', authorize(['Coder']), solvedChallengesStatisticsController); // Only Coders can access
+codersRouter.get('/profile', authorize(['Coder', 'Manager']), getProfile); // Protected route
 
-codersRouter.get('/profile', authorize(['Coder']), getProfile); 
+codersRouter.get('/profile', authorize(['Coder', 'Manager']), getProfile); // Protected route
+
+codersRouter.put('/profile', authorize(['Coder', 'Manager']), updateProfile); // Protected route
 
 export default codersRouter;

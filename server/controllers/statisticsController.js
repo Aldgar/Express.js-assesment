@@ -1,14 +1,16 @@
 import Joi from 'joi';
 import User from '../models/user.js';
 import Challenge from '../models/challenge.js';
+import { getSolvedChallengesStatistics } from '../services/statisticsService.js';
+import { getLeaderboard } from '../services/leaderboardService.js';
 
 // Controller to get the leaderboard
-export const getLeaderboard = async (req, res) => {
+export const leaderboardController = async (req, res) => {
   try {
-    const leaderboard = await User.find().sort({ score: -1 }).limit(10); // Assuming 'score' field exists
+    const leaderboard = await getLeaderboard(); // Fetch leaderboard from the service
     res.status(200).json(leaderboard);
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log the error for debugging
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -25,7 +27,7 @@ export const getTopCoders = async (req, res) => {
   const { k } = req.query;
 
   try {
-    const topCoders = await User.find().sort({ score: -1 }).limit(Number(k)); // Assuming 'score' field exists
+    const topCoders = await User.find({ role: 'Coder' }).sort({ score: -1 }).limit(Number(k)); // Fetch top K coders
     res.status(200).json(topCoders);
   } catch (err) {
     console.error(err);
@@ -34,19 +36,12 @@ export const getTopCoders = async (req, res) => {
 };
 
 // Controller to get solved challenges statistics
-export const getSolvedChallengesStats = async (req, res) => {
-  const { username } = req.query;
+export const solvedChallengesStatisticsController = async (req, res) => {
+  const userId = req.user.id; // Extracted from the `authorize` middleware
 
   try {
-    const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    const solvedStats = await Challenge.aggregate([
-      { $match: { solvedBy: username } }, // Assuming 'solvedBy' field exists
-      { $group: { _id: '$level', count: { $sum: 1 } } },
-    ]);
-
-    res.status(200).json(solvedStats);
+    const stats = await getSolvedChallengesStatistics(userId); // Fetch statistics from the service
+    res.status(200).json(stats);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
