@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
+import { gqlApi } from './api/gqlApi';
+import authReducer from './features/auth/authSlice'; // Assuming you have an auth slice
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
+    [gqlApi.reducerPath]: gqlApi.reducer,
+    auth: authReducer, // Add your auth reducer here
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(gqlApi.middleware),
 });
