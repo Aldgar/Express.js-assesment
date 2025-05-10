@@ -1,6 +1,5 @@
 import User from '../models/user.js';
 import { uploadToSupabase } from '../utils/supabaseClient.js';
-
 export const getUserProfile = async (userId, role) => {
   // Fetch the user profile
   const user = await User.findById(userId).select('-password'); // Exclude the password field

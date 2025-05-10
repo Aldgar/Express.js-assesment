@@ -1,0 +1,27 @@
+services:
+  express-app:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: express-app
+    ports:
+      - "4000:4000"
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_API_KEY: ${SUPABASE_API_KEY}
+    depends_on:
+      - mongodb
+    networks:
+      - backend-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
