@@ -1,8 +1,20 @@
-# React + Vite
+Express.js Assessment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains a Node.js application built using the Express.js framework, designed to demonstrate proficiency in backend development, API creation, and server-side logic implementation.
 
-Currently, two official plugins are available:
+ Features
+	•	RESTful API: Implements standard CRUD operations for managing resources.
+	•	Routing: Utilizes Express.js routing capabilities to handle various HTTP methods and endpoints.
+	•	Middleware: Incorporates middleware functions for request logging, error handling, and request validation.
+	•	Data Persistence: Connects to a database (e.g., MongoDB) to store and retrieve data.
+	•	Authentication: Implements basic authentication mechanisms to secure endpoints.
+	•	Testing: Includes unit and integration tests to ensure code reliability.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ Technologies Used
+	•	Node.js: JavaScript runtime for building scalable network applications.
+	•	Express.js: Web framework for Node.js, simplifying routing and middleware integration.
+	•	MongoDB: NoSQL database for storing application data.
+	•	Mongoose: ODM (Object Data Modeling) library for MongoDB and Node.js.
+	•	Jest: Testing framework for JavaScript.
+	•	ESLint: Linter for identifying and fixing problems in JavaScript code.
+
